@@ -52,6 +52,14 @@ std::string checkInt(std::string num){
     if (std::stoi(num) - std::stof(num) == std::stof(num)){
         return std::to_string(std::stoi(num));
     }else{
+        for (int i = num.length()-1; i >= 0; i--){
+            if (num[i] == '0'){
+                num.erase(i, 1);
+            }
+        }
+        if (num[num.length()-1] == '.'){
+            num += '0';
+        }
         return num;
     }
 }
@@ -91,7 +99,7 @@ int main(){
             stringToUse = names.find("/")->second;
             break;
     }
-    std::string printString = "The " + stringToUse + " of " + checkInt(outputNums.find("firstNum")->second) + operation + outputNums.find("secondNum")->second + " is " + outputNums.find("thirdNum")->second;
+    std::string printString = "The " + stringToUse + " of " + checkInt(outputNums.find("firstNum")->second) + operation + checkInt(outputNums.find("secondNum")->second) + " is " + checkInt(outputNums.find("thirdNum")->second);
     print(printString);
     delete fP;
     return 0;
