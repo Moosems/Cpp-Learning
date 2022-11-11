@@ -17,21 +17,29 @@ void print(std::string givenString, bool recievingInput = false){
     printf("%s", printString.c_str());
 }
 
+int count(std::string original, char target, int length){
+    int count = 0;
+    if (length <= 0){
+        length = original.length();
+    }
+    for (int i = 0; i < length; i++){
+        if (original[i] == target){
+            count += 1;
+        }
+    }
+    return count;
+}
+
 bool isNumber(std::string inputNum){
-    for (int i = 0; i < inputNum.length(); i++){
+    int length = inputNum.length();
+    int periodCount = count(inputNum, '.', length);
+    for (int i = 0; i < length; i++){
         if ((std::isdigit(inputNum[i]) == 0) && (inputNum[i] != '.')){
             return false;
         }
     }
-    bool onlyPeriods = true;
-    for (int i = 0; i < inputNum.length(); i++){
-        if (inputNum[i] != '.'){
-            onlyPeriods = false;
-        }
-    }
-    if (onlyPeriods == true){
-        print("Input cannot be only periods");
-        exit(0);
+    if ((periodCount > 1) || (length == periodCount)){
+        return false;
     }
     return true;
 }
