@@ -5,6 +5,7 @@
 using namespace std;
 
 bool firstPrint = true, *fP;
+char allowedNonNumbers[3] = {'.', '-', '+'};
 
 void print(std::string givenString, bool recievingInput = false){
     std::string printString = givenString;
@@ -32,14 +33,21 @@ int count(std::string original, char target, int length){
 
 bool isNumber(std::string inputNum){
     int length = inputNum.length();
-    int periodCount = count(inputNum, '.', length);
+    int nonNumberCount = sizeof(allowedNonNumbers) / sizeof(char);
+    int counts[nonNumberCount];
+    for (int i = 0; i < nonNumberCount; i++){
+        counts[i] = count(inputNum, allowedNonNumbers[i], length);
+    }
     for (int i = 0; i < length; i++){
-        if ((std::isdigit(inputNum[i]) == 0) && (inputNum[i] != '.')){
+        char currentChar = inputNum[i];
+        if ((std::isdigit(currentChar) == 0) && not (std::find(std::begin(allowedNonNumbers), std::end(allowedNonNumbers), currentChar) != std::end(allowedNonNumbers))){
             return false;
         }
     }
-    if ((periodCount > 1) || (length == periodCount)){
-        return false;
+    for (int i = 0; i < nonNumberCount; i++){
+        if ((counts[i] > 1) || (length == counts[i])){
+            return false;
+        }
     }
     return true;
 }
