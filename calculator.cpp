@@ -7,8 +7,8 @@ using namespace std;
 bool firstPrint = true, *fP;
 char allowedNonNumbers[4] = {'.', '-', '+', '^'}, *aNN;
 
-void print(std::string givenString, bool recievingInput = false){
-    std::string printString = givenString;
+void print(string givenString, bool recievingInput = false){
+    string printString = givenString;
     if (firstPrint == false){
         printString = "\n%s", printString.c_str();
     }
@@ -18,7 +18,7 @@ void print(std::string givenString, bool recievingInput = false){
     printf("%s", printString.c_str());
 }
 
-int count(std::string original, char target, int length){
+int count(string original, char target, int length){
     int count = 0;
     if (length <= 0){
         length = original.length();
@@ -31,7 +31,7 @@ int count(std::string original, char target, int length){
     return count;
 }
 
-bool isNumber(std::string inputNum){
+bool isNumber(string inputNum){
     int length = inputNum.length();
     int nonNumberCount = sizeof(allowedNonNumbers) / sizeof(char);
     int counts[nonNumberCount];
@@ -43,8 +43,8 @@ bool isNumber(std::string inputNum){
     bool onlyAllowedNonNumbers = true;
     for (int i = 0; i < length; i++){
         char currentChar = inputNum[i];
-        if (std::isdigit(currentChar) == 0){
-            if (not (std::find(std::begin(allowedNonNumbers), std::end(allowedNonNumbers), currentChar) != std::end(allowedNonNumbers))){
+        if (isdigit(currentChar) == 0){
+            if (not (find(begin(allowedNonNumbers), end(allowedNonNumbers), currentChar) != end(allowedNonNumbers))){
                 // -.3^-.2 doesn't pass and it returns false partly cause it has multiple negatives & multiple .'s
                 return false;
             }
@@ -59,18 +59,18 @@ bool isNumber(std::string inputNum){
     return true;
 }
 
-std::string exponent(std::string num){
+string exponent(string num){
     bool exponent = false;
     int length = num.length();
     int exponentCount = count(num, '^', length);
-    std::string result;
+    string result;
     if (exponentCount > 1){
         print("Too many ^'s");
         exit(0);
     }else if(exponentCount == 1){
         int index = num.find('^');
-        float firstNum = std::stof(std::string(num.begin(), num.begin()+index));
-        float secondNum = std::stof(std::string(num.begin()+index + 1, num.end()));
+        float firstNum = stof(string(num.begin(), num.begin()+index));
+        float secondNum = stof(string(num.begin()+index + 1, num.end()));
         result = to_string(pow(firstNum, secondNum));
     }else{
         result = num;
@@ -78,11 +78,12 @@ std::string exponent(std::string num){
     return result;
 }
 
-std::string getNumber(std::string counter){
-    std::string printString = "Please give the " + counter + " number to be used in the operation: ";
-    std::string mediator;
+string getNumber(string counter){
+    string printString = "Please give the " + counter + " number to be used in the operation: ";
+    string mediator;
+    print(printString, true);
     // Uses string because it removes the necessity of try/catch and allows for better checking and more versatility with the tradeoff of mental sanity
-    std::getline(std::cin, mediator);
+    getline(cin, mediator);
     mediator = exponent(mediator);
     if ((mediator == "") || (isNumber(mediator) == false)){
         print("Cannot enter non-number");
@@ -91,17 +92,17 @@ std::string getNumber(std::string counter){
     return mediator;
 }
 
-std::string checkInt(std::string num){
+string checkInt(string num){
     char firstChar = num[0];
     if (firstChar == '.'){
         num = "0" + num;
     }else if (firstChar == '-'){
         if (num[1] == '.'){
-            num = "-0." + std::string(num.begin() + 2, num.end());
+            num = "-0." + string(num.begin() + 2, num.end());
         }
     }
-    if (std::stoi(num) - std::stof(num) == std::stof(num)){
-        return std::to_string(std::stoi(num));
+    if (stoi(num) - stof(num) == stof(num)){
+        return to_string(stoi(num));
     }else{
         for (int i = num.length()-1; i >= 0; i--){
             if (num[i] == '0'){
@@ -116,16 +117,16 @@ std::string checkInt(std::string num){
 }
 
 int main(){
-    std::string operation;
-    std::string stringToUse;
-    map<std::string, std::string> names;
-    map<std::string, std::string> outputNums;
+    string operation;
+    string stringToUse;
+    map<string, string> names;
+    map<string, string> outputNums;
     names["+"] = "sum";
     names["-"] = "difference";
     names["*"] = "product";
     names["/"] = "quotient";
     print("This is a simple calculator I wrote in C++\nPlease give your operator here (+, -, *, /): ", true);
-    std::getline(std::cin, operation);
+    getline(cin, operation);
     if ((operation != "+") && (operation != "-") && (operation != "*") && (operation != "/")){
         print("That is not a valid operation. Shutting down");
         return 0;
@@ -134,23 +135,23 @@ int main(){
     outputNums["secondNum"] = getNumber("second");
     switch (operation[0]) {
         case '+':
-            outputNums["thirdNum"] = std::to_string(std::stof(outputNums.find("firstNum")->second)+std::stof(outputNums.find("secondNum")->second));
+            outputNums["thirdNum"] = to_string(stof(outputNums.find("firstNum")->second)+stof(outputNums.find("secondNum")->second));
             stringToUse = names.find("+")->second;
             break;
         case '-':
-            outputNums["thirdNum"] = std::to_string(std::stof(outputNums.find("firstNum")->second)-std::stof(outputNums.find("secondNum")->second));
+            outputNums["thirdNum"] = to_string(stof(outputNums.find("firstNum")->second)-stof(outputNums.find("secondNum")->second));
             stringToUse = names.find("-")->second;
             break;
         case '*':
-            outputNums["thirdNum"] = std::to_string(std::stof(outputNums.find("firstNum")->second)*std::stof(outputNums.find("secondNum")->second));
+            outputNums["thirdNum"] = to_string(stof(outputNums.find("firstNum")->second)*stof(outputNums.find("secondNum")->second));
             stringToUse = names.find("*")->second;
             break;
         default:
-            outputNums["thirdNum"] = std::to_string(std::stof(outputNums.find("firstNum")->second)/std::stof(outputNums.find("secondNum")->second));
+            outputNums["thirdNum"] = to_string(stof(outputNums.find("firstNum")->second)/stof(outputNums.find("secondNum")->second));
             stringToUse = names.find("/")->second;
             break;
     }
-    std::string printString = "The " + stringToUse + " of " + checkInt(outputNums.find("firstNum")->second) + operation + checkInt(outputNums.find("secondNum")->second) + " is " + checkInt(outputNums.find("thirdNum")->second);
+    string printString = "The " + stringToUse + " of " + checkInt(outputNums.find("firstNum")->second) + operation + checkInt(outputNums.find("secondNum")->second) + " is " + checkInt(outputNums.find("thirdNum")->second);
     print(printString);
     delete fP;
     delete aNN;
